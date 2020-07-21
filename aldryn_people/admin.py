@@ -34,7 +34,7 @@ class PersonAdmin(PlaceholderAdminMixin,
             threshold = getattr(
                 settings, 'ALDRYN_PEOPLE_USER_THRESHOLD', 50)
             model = Person._meta.get_field('user').model
-            if model.objects.count() > threshold:
+            if model.objects.count() > threshold and hasattr(db_field, 'rel'):
                 kwargs['widget'] = admin.widgets.ForeignKeyRawIdWidget(
                     db_field.rel, self.admin_site, using=kwargs.get('using'))
                 return db_field.formfield(**kwargs)
@@ -71,6 +71,10 @@ class PersonAdmin(PlaceholderAdminMixin,
         return obj.group_count
     num_groups.short_description = _('# Groups')
     num_groups.admin_order_field = 'group_count'
+
+    def all_translations(self, obj):
+        from django.utils.html import format_html
+        return format_html(super().all_translations(obj))
 
 
 class GroupAdmin(PlaceholderAdminMixin,
