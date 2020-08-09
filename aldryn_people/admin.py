@@ -109,6 +109,10 @@ class GroupAdmin(PlaceholderAdminMixin,
     num_people.short_description = _('# People')
     num_people.admin_order_field = 'people_count'
 
+    def all_translations(self, obj):
+        from django.utils.html import format_html
+        return format_html(super().all_translations(obj))
+
 
 admin.site.register(Person, PersonAdmin)
 admin.site.register(Group, GroupAdmin)
